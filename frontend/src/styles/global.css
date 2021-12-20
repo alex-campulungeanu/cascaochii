@@ -1,0 +1,18 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.player-wrapper {
+  position: relative;
+  /* width: 700px;
+  height: 700px; */
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 700px;
+  height: 700px;
+}

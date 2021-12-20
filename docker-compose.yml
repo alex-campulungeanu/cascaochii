@@ -1,0 +1,61 @@
+version: '3.8'
+
+x-proxy:
+  &proxy
+  http_proxy: "${HTTP_PROXY}"
+  https_proxy: "${HTTPS_PROXY}"
+x-common:
+  &common
+  restart: always
+  command: tail -f /dev/null
+
+services:
+  frontend:
+    container_name: ${APP_NAME}_fe
+    working_dir: /app/frontend
+    image: node:14
+    restart: on-failure
+    volumes:
+      - ./:/app
+      - /app/frontend/node_modules
+    ports:
+      - 3008:3000
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      << : *proxy
+    env_file:
+      - .env
+    command: tail -f /dev/null
+  backend:
+    container_name: ${APP_NAME}_be
+    image: python:3
+    working_dir: /app/backend
+    environment:
+      << : *proxy
+      API_URL: http://localhost:8008/api
+    env_file:
+      - .env
+    volumes:
+      - '.:/app'
+      - /app/backend/venv
+    ports:
+      - 8008:8000
+    restart: on-failure
+    command: tail -f /dev/null
+  db:
+    container_name: ${APP_NAME}_db
+    image: postgres
+    environment:
+      << : *proxy
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: cascaochii
+    volumes:
+    - db-data:/var/lib/postgresql/data
+    ports:
+      - 5438:5432
+    restart: on-failure
+      
+volumes:
+  db-data:
+    name: ${APP_NAME}_db

@@ -1,0 +1,6 @@
+.env
+node_modules
+venv
+*.pyc
+*.sqlite3
+yarn-error.log
