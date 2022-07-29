@@ -35,7 +35,7 @@ const GameForm = () => {
   const isNew = id ? false: true
 
   const getGame = async () => {
-    const response = await axios.get(`${API_URL}/games/${id}/`)
+    const response = await axios.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 
@@ -47,12 +47,9 @@ const GameForm = () => {
 
   const handleSubmitGame = async (values, actions) => {
     const postData = values
-    console.log(postData)
     if (isNew) {
-      const response = await axios.post(`${API_URL}/games/`, postData)
-      console.log(response)
+      const response = await axios.post(`${API_URL}/game/games/`, postData)
       if (response.status === 201) {
-        console.log('Add game')
         actions.resetForm()
         const newGameId = response.data.id
         history.push(`/games/${newGameId}/edit`)
@@ -62,7 +59,7 @@ const GameForm = () => {
       }
     } else {
       console.log('Update game', postData)
-      const response = await axios.put(`${API_URL}/games/${id}/`, postData)
+      const response = await axios.put(`${API_URL}/game/games/${id}/`, postData)
       console.log(response)
     }
   }

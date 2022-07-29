@@ -13,7 +13,7 @@ const PlayersTab = () => {
   const [players, setPlayers] = useState([])
 
   const getPlayers = async () => {
-    const response =  await axios.get(`${API_URL}/${id}/players/`)
+    const response =  await axios.get(`${API_URL}/game/${id}/players/`)
     return response.data
   }
 
@@ -37,7 +37,7 @@ const PlayersTab = () => {
   const handleDelete = async (player) => {
     console.log(`delete player with id ${player.id}`)
     const playerId = player.id
-    const response = await axios.delete(`${API_URL}/players/${playerId}/`);
+    const response = await axios.delete(`${API_URL}/game/players/${playerId}/`);
     if (response.status === 204) {
       getPlayers().then(data => setPlayers(data))
     } else {
@@ -57,13 +57,13 @@ const PlayersTab = () => {
         name: formData.name,
         game: id 
       }
-      const response = await axios.put(`${API_URL}/players/${data.id}/`, data);
+      const response = await axios.put(`${API_URL}/game/players/${data.id}/`, data);
     } else {
       const data = {
         name: formData.name,
         game: id 
       }
-      const response = await axios.post(`${API_URL}/players/`, data);
+      const response = await axios.post(`${API_URL}/game/players/`, data);
     }
     getPlayers().then(data => setPlayers(data))
   }

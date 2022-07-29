@@ -2,10 +2,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "jsx": "preserve",
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@components/*": ["./components/*"]
-    }
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"],
   "include": ["src"]

@@ -29,6 +29,7 @@ Technologies:
 
 
 ## 💻 Development
+- fill .env file from root directory (this file is read inside django project settings.py)
 - docker-compose up -d
 
 ``` cascaochii_be > ./scripts/run_server.sh ```
@@ -40,6 +41,7 @@ Technologies:
 https://www.youtube.com/watch?v=GieYIzvdt2U
 https://github.com/bradtraversy/lead_manager_react_django
 https://github.com/shtanko-michael/react-multiple-layouts-example
+https://www.youtube.com/watch?v=xjMP0hspNLE   --refresh token
 
 
 ## TODO:
@@ -50,6 +52,7 @@ https://github.com/shtanko-michael/react-multiple-layouts-example
   - [ ] investigate typecheking in Django si de vazut daca este fezabil
   - [ ] de vazut daca pot sa adaug o subclasa care sa mosteneasca created_at, updated_at 
   - [ ] ar trebui sa schimb sqlite cu Postgres, poate chiar sa folosesc o platforma ca fly.io
+  - [ ] daca opresc backend-ul apare 401 unauthorized
 
 - frontend:
   - [x] sa fac un layout pentru topbar
@@ -58,4 +61,6 @@ https://github.com/shtanko-michael/react-multiple-layouts-example
   - [ ] sa prind si sa afisez raspunsul cand incerc sa adaug un game care exista
   - [ ] sa unific PlayersForm si QuestionForm
   - [ ] sa adaug un pop-up de confirmare la toate actiunile de editare, stergere
+  - [ ] sa pun in pagina cu jocul si numele jocului pe care esti
+  - [ ] sa pun un buton de back
   

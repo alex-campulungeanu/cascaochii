@@ -19,11 +19,11 @@ const tabs = [
 
 const Game = () => {
   const { id } = useParams();
-  const [currentTab, setCurrentTab] = useState('video')
+  const [currentTab, setCurrentTab] = useState('players')
   const [game, setGame] = useState(null)
 
   const getGame = async () => {
-    const response = await axios.get(`${API_URL}/games/${id}/`)
+    const response = await axios.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 
@@ -37,7 +37,7 @@ const Game = () => {
 
   return (
     <>
-      <Box sx={{ width: '100%', marginLeft: '30px'}}>
+      <Box sx={{ marginLeft: '30px'}}>
         <Box mt={3}>
           <Tabs 
             value={currentTab}

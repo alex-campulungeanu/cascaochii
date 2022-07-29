@@ -1,29 +1,36 @@
 import React from 'react'
-import {Switch, Route, BrowserRouter} from 'react-router-dom'
+import {Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
 
-import LayoutContainer from './Layouts/LayoutContainer'
-import MainLayout from '../layouts/MainLayout'
+import LayoutContainer from './layouts/LayoutContainer'
+import MainLayout from 'navigation/layouts/MainLayout'
 
 import GameRun from '../pages/GameRun'
 import GameList from '../pages/GameList'
 import GameUpdate from '../pages/GameCRUD/index'
 import GameTab from '../pages/GameCRUD/GameTab'
+import Login from '../pages/Login'
+import PrivateRoute from 'navigation/PrivateRoute'
+import { AuthProvider } from 'context/AuthContext'
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <LayoutContainer layout={MainLayout} isPublic={true}>
-          {/* a Switch is needed here for ambigous routing */}
-          <Switch>
-            <Route path={'/games'} exact component={() => <GameList />} />
-            <Route path={'/games/create'} exact component={() => <GameTab />} />
-            <Route path={'/games/:id'} exact component={() => <GameRun />} />
-            <Route path={'/games/:id/edit'} exact component={() => <GameUpdate />} />
-          </Switch>
-        </LayoutContainer>
-        <Route component={() => <div>404 page not found</div>}></Route>
-      </Switch>
+      <AuthProvider>
+        <Switch>
+          <Route path={'/login'} exact component={() => <Login />} />
+          <LayoutContainer layout={MainLayout} isPublic={true}>
+            {/* a Switch is needed here for ambigous routing */}
+            <Switch>
+              <PrivateRoute path={'/games'} exact component={() => <GameList />} />
+              <PrivateRoute path={'/games/create'} exact component={() => <GameTab />} />
+              <PrivateRoute path={'/games/:id'} exact component={() => <GameRun />} />
+              <PrivateRoute path={'/games/:id/edit'} exact component={() => <GameUpdate />} />
+              {/* <Redirect from="/" to="/games" /> */}
+            </Switch>
+          </LayoutContainer>
+          {/* <Route component={() => <div>404 page not found</div>}></Route> */}
+        </Switch>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

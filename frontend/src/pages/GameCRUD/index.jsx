@@ -23,7 +23,7 @@ const index = () => {
   const [game, setGame] = useState(null)
 
   const getGame = async () => {
-    const response = await axios.get(`${API_URL}/games/${id}/`)
+    const response = await axios.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 

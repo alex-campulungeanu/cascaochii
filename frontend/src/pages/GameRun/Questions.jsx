@@ -21,21 +21,20 @@ const Questions = ({questions, url}) => {
   }
 
   const setTimeFromQuestion = (time) => {
-    console.log(time)
     setTime(time)
     // onClickFullscreen()
     setIsPaused(false)
   }
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'row', marginLeft: '10px'}}>
-      <Box sx={{width: '50%', flexShrink: 0}}>
+    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+      <Box>
         <QuestionList 
           questions={questions} 
           getTime={setTimeFromQuestion}
         />
       </Box>
-      <Box sx={{width: '50%', flexShrink: 0, display: 'flex',  marginLeft: '30px', justifyContent: 'center', flexDirection: 'column'}}>
+      <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
         <ReactPlayer
           ref={playerRef}
           controls={true}

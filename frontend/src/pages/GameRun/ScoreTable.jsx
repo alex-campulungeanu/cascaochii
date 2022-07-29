@@ -1,21 +1,23 @@
 import React, {useState, useRef, useMemo, useEffect} from 'react'
 import { Button, Modal, Paper, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import axios from 'axios'
 import {useParams} from 'react-router-dom'
 
-import ChangeScorModal from 'components/ChangeScoreModal'
+// import ChangeScorModal from 'components/ChangeScoreModal'
 import {API_URL} from '../../config/constants'
+import Podium from 'components/Podium/index'
 
 const ScoreTable = () => {
   const {id} = useParams()
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const [allPlayers, setAllPlayers] = useState([])
-  const [currentPlayer, setCurrentPlayer] = useState({});
+  // const [currentPlayer, setCurrentPlayer] = useState({});
 
   const getAllPlayers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/${id}/players/`);
-      console.log(response)
+      const response = await axios.get(`${API_URL}/game/${id}/players/`);
       return response.data;
     } catch (e) {
       console.error(e.message);
@@ -28,35 +30,44 @@ const ScoreTable = () => {
     })
   }, [])
 
-  const handleClickOpen = (item) => {
-    console.log(item)
-    setCurrentPlayer(item)
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason !== 'backdropClick') {
-      setOpen(false);
-    }
-  }
-
-  const onSubmit = async (formData) => {
+  // const handleClickOpen = (item) => {
+  //   setCurrentPlayer(item)
+  //   setOpen(true);
+  // };
+  
+  const handleChangeScore = async (player, quantity) => {
     const data = {
-      ...currentPlayer,
-      score: formData.score
+      ...player,
+      score: player.score + quantity
     }
-    const response = await axios.put(`${API_URL}/players/${formData.id}/`, data);
+    const response = await axios.put(`${API_URL}/game/players/${player.id}/`, data);
     getAllPlayers().then((data) => setAllPlayers(data))
   }
 
+  // const handleClose = (event, reason) => {
+  //   if (reason !== 'backdropClick') {
+  //     setOpen(false);
+  //   }
+  // }
+
+  // const onSubmit = async (formData) => {
+  //   const data = {
+  //     ...currentPlayer,
+  //     score: formData.score
+  //   }
+  //   const response = await axios.put(`${API_URL}/game/players/${formData.id}/`, data);
+  //   getAllPlayers().then((data) => setAllPlayers(data))
+  // }
+
   return (
-    <>
-      <Paper sx={{width: '30%'}}>
+    <div style={{display: 'flex', flexDirection: 'row'}}>
+      <Paper sx={{width: '40%'}}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell><Typography>Player</Typography></TableCell>
               <TableCell><Typography>Score</Typography></TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -71,8 +82,18 @@ const ScoreTable = () => {
                   <TableCell>{item.score}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={() => handleClickOpen(item)}
-                      color="secondary"
+                      onClick={() => handleChangeScore(item, -1)}
+                      color="error"
+                      startIcon={<RemoveIcon />}
+                    >
+                      Steal the cookie
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => handleChangeScore(item, 1)}
+                      color="success"
+                      endIcon={<AddIcon />}
                     >
                       Give a cookie
                     </Button>
@@ -83,15 +104,17 @@ const ScoreTable = () => {
           </TableBody>
         </Table>
       </Paper>
-      
-    <ChangeScorModal 
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vh'}}>
+        <Podium players={allPlayers}/>
+      </div>
+    {/* <ChangeScorModal 
       currentPlayer = {currentPlayer}
       open={open}
       handleClose={handleClose}
       onSubmit={onSubmit}
-    />
+    /> */}
 
-    </>
+    </div>
   )
 }
 

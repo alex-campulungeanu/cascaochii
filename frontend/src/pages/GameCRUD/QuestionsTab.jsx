@@ -24,7 +24,7 @@ const QuestionsTab = () => {
   };
 
   const getQuestions = async () => {
-    const response =  await axios.get(`${API_URL}/${id}/questions/`)
+    const response =  await axios.get(`${API_URL}/game/${id}/questions/`)
     return response.data
   }
 
@@ -51,7 +51,7 @@ const QuestionsTab = () => {
   // TODO: add a popup when deleting success or failed
   const handleDelete = async (question) => {
     const playerId = question.id
-    const response = await axios.delete(`${API_URL}/questions/${playerId}/`);
+    const response = await axios.delete(`${API_URL}/game/questions/${playerId}/`);
     if (response.status === 204) {
       getQuestions().then(data => setQuestions(data))
     } else {
@@ -73,7 +73,7 @@ const QuestionsTab = () => {
         video_timestamp: formData.video_timestamp,
         game: id 
       }
-      const response = await axios.put(`${API_URL}/questions/${data.id}/`, data);
+      const response = await axios.put(`${API_URL}/game/questions/${data.id}/`, data);
     } else {
       const data = {
         name: formData.name,
@@ -82,7 +82,7 @@ const QuestionsTab = () => {
         video_timestamp: formData.video_timestamp,
         game: id
       }
-      const response = await axios.post(`${API_URL}/questions/`, data);
+      const response = await axios.post(`${API_URL}/game/questions/`, data);
     }
     getQuestions().then(data => setQuestions(data))
   }

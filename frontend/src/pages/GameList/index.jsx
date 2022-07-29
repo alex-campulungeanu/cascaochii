@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useconte, useContext} from 'react'
 import  axios from 'axios'
 import { Link } from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,12 +8,15 @@ import {Box, Button, Card, SvgIcon, Table, TableBody, TableCell, TableHead, Tabl
 import {format, parseISO} from 'date-fns'
 
 import {API_URL} from 'config/constants'
+import AuthContext from 'context/AuthContext';
+import { axiosInstance } from 'lib/axiosInstance';
 
 const GameList = () => {
   const [games, setGames] = useState([])
-  
+  const { user } = useContext(AuthContext)
+
   const getAllGames = async () => {
-    const response = await axios.get(`${API_URL}/games/`)
+    const response = await axiosInstance.get(`${API_URL}/game/games/`)
     return response.data
   }
 
@@ -25,7 +28,7 @@ const GameList = () => {
 
   // TODO: add a confirmation modal
   const handleDeleteGame = async (id) => {
-    const response = await axios.delete(`${API_URL}/games/${id}/`)
+    const response = await axios.delete(`${API_URL}/game/games/${id}/`)
     if (response.status === 204) {
       getAllGames().then(data => setGames(data))
     }

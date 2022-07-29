@@ -1,0 +1,21 @@
+.root {
+  background: rgb(249, 250, 251);
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.content {
+  max-width: 480px;
+  padding: 25px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.heading {
+  text-align: center;
+}

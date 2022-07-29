@@ -6,11 +6,31 @@ from rest_framework.views import APIView
 from django.db.models import QuerySet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 from game.models import Game, Question, Player
 from game.serializers import GameSerializer, PlayerSerializer, QuestionSerializer
 
 # Create your views here.
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_all_games(request):
+#     logger.info('Fetching the games')
+#     games: QuerySet[Game] = Game.objects.all()
+#     serializer = GameSerializer(games, many=True)
+#     return Response(serializer.data)
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def add_game(request):
+#     logger.info('Adding a game')
+#     serializer: GameSerializer = GameSerializer(data = request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status = status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class GameList(APIView):
     def get(self, request, format=None):
@@ -128,7 +148,7 @@ class PlayerList(APIView):
 class GamePlayerList(APIView):
     def get(self, request, pk, format=None):
         logger.info(f'Fetching all players from game: {pk}')
-        players: QuerySet[Player] = Player.objects.all().filter(game=pk)
+        players: QuerySet[Player] = Player.objects.all().filter(game=pk).order_by('id')
         serializer = PlayerSerializer(players, many=True)
         return Response(serializer.data)
 
