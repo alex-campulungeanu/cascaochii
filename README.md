@@ -49,6 +49,8 @@ https://www.youtube.com/watch?v=xjMP0hspNLE   --refresh token
 - [ ] fix the issue with jsconfig.json (absolute path, go to file)
 
 - backend:
+  - [ ] validare request
+  - [ ] de facut o clasa pentru Response, sa trimit raspunsul in acelasi format mereu
   - [ ] investigate typecheking in Django si de vazut daca este fezabil
   - [ ] de vazut daca pot sa adaug o subclasa care sa mosteneasca created_at, updated_at 
   - [ ] ar trebui sa schimb sqlite cu Postgres, poate chiar sa folosesc o platforma ca fly.io
@@ -63,4 +65,5 @@ https://www.youtube.com/watch?v=xjMP0hspNLE   --refresh token
   - [ ] sa adaug un pop-up de confirmare la toate actiunile de editare, stergere
   - [ ] sa pun in pagina cu jocul si numele jocului pe care esti
   - [ ] sa pun un buton de back
+  - [ ] fix "Can't perform a React state update on an unmounted component." when login
   

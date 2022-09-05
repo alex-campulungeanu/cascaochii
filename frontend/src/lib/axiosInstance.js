@@ -2,7 +2,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 import { API_URL } from 'config/constants'
-import { getLocalToken } from 'utils/auth'
+import { getLocalAccessToken } from 'utils/auth'
 
 const customeInstance = axios.create({
   baseURL: API_URL,
@@ -11,7 +11,7 @@ const customeInstance = axios.create({
 const onRequest = (config) => {
   // const loggedUserJson = window.sessionStorage.getItem(STORAGE_USER_CONTAINER) || '{}'
   // const user = JSON.parse(loggedUserJson)
-  const token = getLocalToken()
+  const token = getLocalAccessToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -44,7 +44,7 @@ const onResponseError = (error) => {
   } else {
     console.log('Else error', error)
     const response = error.response
-    return Promise.reject(response);
+    return Promise.resolve(response);
   }
 }
 

@@ -11,21 +11,20 @@ const AuthContext = createContext()
 export default AuthContext
 
 export const AuthProvider = ({children}) => {
+  // TOOD: i don't need user and userInfo variables
   const [user, setUser] = useState(extractJWTData())
-  const [authTokens, setAuthTokens] = useState(()=> localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
   const history = useHistory()
   const [loading, setLoading] = useState(true)
 
   const loginUser = async (formData) => {
-    const response = await axiosInstance.post('/api/token', {
+    const response = await axiosInstance.post('/accounts/login', {
       'username': formData.username,
       'password': formData.password
     })
     if (response.status === 200) {
       const data = response.data
-      setAuthTokens(data)
-      setUser(jwt_decode(data.access))
-      localStorage.setItem('authTokens', JSON.stringify(data))
+      setUser(data)
+      localStorage.setItem('userInfo', JSON.stringify(data))
       // history.push('/games')
     } else if (response.status === 401){
       return 'Invalid credentials'
@@ -34,23 +33,38 @@ export const AuthProvider = ({children}) => {
     }
   }
 
+  const registerUser = async (formData) => {
+    const response = await axiosInstance.post('/accounts/register', {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      username: formData.username,
+      password: formData.password,
+    })
+    if (response.status === 200) {
+      const data = response.data
+      history.push('/games')
+    } else {
+      return response.data.message
+    }
+  }
+
   const logoutUser = () => {
-    setAuthTokens(null)
     setUser(null)
-    localStorage.removeItem('authTokens')
+    localStorage.removeItem('userInfo')
     history.push('/login')
   }
 
   const updateToken = async () => {
-    if (authTokens) {
-      const response = await axiosInstance.post('/api/token/refresh', {
-        'refresh': authTokens?.refresh
+    console.log('Access updateToken')
+    if (user) {
+      const response = await axiosInstance.post('/accounts/token/refresh', {
+        'refresh': user?.refresh
       })
       const data = response.data
       if (response.status === 200) {
-        setAuthTokens(data)
-        setUser(jwt_decode(data.access))
-        localStorage.setItem('authTokens', JSON.stringify(data))
+        const newUser = {...user, access: data.access, refresh: data.refresh}
+        setUser(newUser)
+        localStorage.setItem('userInfo', JSON.stringify(newUser))
       } else {
         logoutUser()
       }
@@ -66,17 +80,18 @@ export const AuthProvider = ({children}) => {
     }
     const fourMinutes = 1000 * 60 * 4
     const interval = setInterval(() => {
-      if (authTokens) {
+      if (user) {
         updateToken()
       }
     }, fourMinutes)
     return () => clearInterval(interval)
-  }, [authTokens, loading])
+  }, [user, loading])
 
   const contextData = {
     user: user,
     loginUser: loginUser,
     logoutUser: logoutUser,
+    registerUser: registerUser,
   }
 
   return (

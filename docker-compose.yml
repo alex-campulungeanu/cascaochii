@@ -18,6 +18,7 @@ services:
     volumes:
       - ./:/app
       - /app/frontend/node_modules
+      - /app/backend
     ports:
       - 3008:3000
     environment:
@@ -38,6 +39,7 @@ services:
     volumes:
       - '.:/app'
       - /app/backend/venv
+      - /app/frontend
     ports:
       - 8008:8000
     restart: on-failure

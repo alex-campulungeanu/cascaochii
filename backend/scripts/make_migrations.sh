@@ -25,6 +25,7 @@ Help() {
     echo "Syntax: Usage: $usage_message"
     echo "options:"
     echo "  -h     Print this Help."
+    echo "  -a     Run migrations on specific app."
     echo "  -n     Name of the script."
     echo "  -d     Run migration with --dry-run (it's just a preview, no changes  are made on DB)."
     echo
@@ -41,15 +42,19 @@ run_migration() {
 
 # [ $# -eq 0 ] && usage
 
-while getopts ":h n: :d" opt; do
+while getopts ":h n: :d a:" opt; do
     case "${opt}" in
+        a)
+            app_name=$OPTARG
+            migrations_args+=$app_name
+            ;;
         n) 
             migration_name=$OPTARG
-            migrations_args="--name $migration_name"
+            migrations_args+=" --name $migration_name"
             ;;
         d) 
             check_dry_run="yes"
-            migrations_args="--dry-run"
+            migrations_args+=" --dry-run"
             ;;
         h) # Display help.
             Help
@@ -89,4 +94,5 @@ shift $((OPTIND-1))
 #     done
 # fi
 
+echo $migrations_args
 run_migration "${migrations_args}"

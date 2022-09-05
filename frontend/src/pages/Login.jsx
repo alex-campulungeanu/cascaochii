@@ -1,42 +1,47 @@
-import React from 'react'
-import { Container, Divider, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { Button, Container, Divider, Link, Typography } from '@mui/material'
 import { motion } from 'framer-motion'
+import { Link as RouterLink} from 'react-router-dom'
 
 import LoginForm from 'components/LoginForm'
 import * as styles from './Login.module.css'
 import LoginLogo from 'components/LoginLogo'
-
-const easing = [0.6, -0.05, 0.01, 0.99];
-const fadeInUp = {
-  initial: {
-    y: 60,
-    opacity: 0,
-    transition: {duration: 0.6, ease: easing}
-  },
-  animate: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: easing,
-    }
-  }
-}
+import RegisterLogo from 'components/RegisterLogo'
+import { easing, fadeInUp} from 'utils/animation'
 
 const Login = () => {
+  // TODO: maybe is better to have only a boolean isLogin(true | false)
+  const [formType, setFormType] = useState('login')
+
+  const toogleFormType = () => {
+    setFormType(current => (current === 'register' ? 'login' : 'register'))
+  }
+
   return (
     <div className={styles.root}>
       <Container maxWidth='sm'>
         <div className={styles.content}>
           <motion.div className={styles.heading} {...fadeInUp}>
-            <LoginLogo />
+            {formType === 'login' ? <LoginLogo /> : <RegisterLogo />}
           </motion.div>
           <Divider sx={{my: 3}} component={motion.div} {...fadeInUp}>
             <Typography sx={{color: 'text.secondary'}}>
-              Login to your account
+            {formType === 'register' ? 'Create new account' : 'Login to your account'}
             </Typography>
           </Divider>
-          <LoginForm />
+          <LoginForm formType={formType}/>
+          <Typography
+            component={motion.p}
+            {...fadeInUp}
+            variant='body2'
+            align='center'
+            sx={{mt: 3}}
+          >
+            {formType === 'register' ? "Have an account? ": "Don't have an account? "}
+            <Button variant='subtitle2' onClick={toogleFormType}>
+              {formType === 'register' ? 'Login' : 'Sign up'}
+            </Button>
+          </Typography>
         </div>
       </Container>
     </div>
