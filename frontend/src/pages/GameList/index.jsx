@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useconte, useContext} from 'react'
-import  axios from 'axios'
 import { Link } from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,10 +27,11 @@ const GameList = () => {
 
   // TODO: add a confirmation modal
   const handleDeleteGame = async (id) => {
-    const response = await axios.delete(`${API_URL}/game/games/${id}/`)
-    if (response.status === 204) {
-      getAllGames().then(data => setGames(data))
-    }
+    console.log('Should delete with modal')
+    // const response = await axiosInstance.delete(`${API_URL}/game/games/${id}/`)
+    // if (response.status === 204) {
+    //   getAllGames().then(data => setGames(data))
+    // }
   }
 
   return (

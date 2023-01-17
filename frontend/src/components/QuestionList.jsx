@@ -26,7 +26,7 @@ const QuestionList = (props) => {
   const onClickTime = (event, value) => {
     props.getTime(value)
   }
-  console.log(props)
+  
   return (
     <div>
       {props.questions.map(question => (
