@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import { green } from '@mui/material/colors';
@@ -19,12 +18,12 @@ import { Divider } from '@mui/material';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';
 
 import Logo from 'components/Logo'
-import AuthContext from 'context/AuthContext';
+import AuthContext, { useAuth } from 'context/AuthContext';
 
 const pages = []
 
 const TopBar = () => {
-  const { user, logoutUser } = useContext(AuthContext)
+  const { user, logoutUser } = useAuth()
   const history = useHistory()
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -58,8 +57,8 @@ const TopBar = () => {
             <Typography
               variant="h5"
               noWrap
-              component="div"
-              href=""
+              component={'div'}
+              // href=""
               sx={{
                 mr: 2,
                 flexGrow: 1,
@@ -120,8 +119,8 @@ const TopBar = () => {
             <Typography
               variant="h5"
               noWrap
-              component="div"
-              href=""
+              component={'div'}
+              // href=""
               sx={{
                 mr: 2,
                 flexGrow: 1,

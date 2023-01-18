@@ -18,11 +18,16 @@ services:
     volumes:
       - ./:/app
       - /app/frontend/node_modules
-      - /app/backend
+      - /app/backend/venv
     ports:
       - 3008:3000
     environment:
       CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      TS_NODE_TRANSPILE_ONLY: "true"
+      # TS_NODE_TRANSPILE_ONLY: "true"
+      # TS_NODE_FILES: "true" 
+      WDS_SOCKET_PORT: 0
       << : *proxy
     env_file:
       - .env
@@ -39,7 +44,7 @@ services:
     volumes:
       - '.:/app'
       - /app/backend/venv
-      - /app/frontend
+      - /app/frontend/node_modules
     ports:
       - 8008:8000
     restart: on-failure

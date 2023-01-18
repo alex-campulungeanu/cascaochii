@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import { Box } from '@mui/system'
 import { Divider, Tabs, Tab } from '@mui/material'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import {API_URL} from 'config/constants'
 import GameTab from 'pages/GameCRUD/GameTab'
 import PlayersTab from 'pages/GameCRUD/PlayersTab'
 import QuestionsTab from 'pages/GameCRUD/QuestionsTab'
+import { IGameInterfaceApi } from 'interfaces/game-interface'
 
 // TODO: change this into a verticla tab, for diversity
 
@@ -17,18 +18,22 @@ const tabs = [
   {value: 'questions', label: 'Questions'},
 ]
 
-const index = () => {
-  const { id } = useParams();
-  const [currentTab, setCurrentTab] = useState('game')
-  const [game, setGame] = useState(null)
+interface ParamsInterface {
+  id: string
+}
 
-  const getGame = async () => {
-    const response = await axios.get(`${API_URL}/game/games/${id}/`)
+const index = () => {
+  const { id } = useParams<ParamsInterface>();
+  const [currentTab, setCurrentTab] = useState('game')
+  const [game, setGame] = useState<IGameInterfaceApi | null>(null)
+
+  const getGame = async (): Promise<IGameInterfaceApi> => {
+    const response: AxiosResponse<IGameInterfaceApi> = await axios.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 
   useEffect(() => {
-    getGame().then(game => setGame(game))
+    getGame().then((game: IGameInterfaceApi) => setGame(game))
   }, [])
 
   const handleTabsChange = (event, newValue) => {
@@ -53,7 +58,8 @@ const index = () => {
         <Divider />
         {game && (
           <Box sx={{ml: 3, mt: 3}}>
-            {currentTab === 'game' && <GameTab game={game} />}
+            {/* {currentTab === 'game' && <GameTab game={game} />} */}
+            {currentTab === 'game' && <GameTab />}
             {currentTab === 'players' && <PlayersTab />}
             {currentTab === 'questions' && <QuestionsTab />}
           </Box>    

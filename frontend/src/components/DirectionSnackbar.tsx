@@ -8,7 +8,7 @@ import MuiAlert from '@mui/lab/Alert';
 // }
 
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 });
 
 // function TransitionLeft(props) {
@@ -58,9 +58,9 @@ export function DirectionSnackbar(props) {
         // message="Product added"
         // key={transition ? transition.name : ''}
       >
-        <Alert onClose={handleClose} severity="success">
+        <MuiAlert onClose={handleClose} severity="success">
           {props.message}
-        </Alert>
+        </MuiAlert>
       </Snackbar>
     </div>
   );

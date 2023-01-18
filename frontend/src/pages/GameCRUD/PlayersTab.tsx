@@ -1,19 +1,24 @@
 import React, {useState, useEffect} from 'react'
 import { Button, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from '@mui/material';
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {useParams} from 'react-router-dom'
 
 import PlayerModal from 'components/PlayerModal'
 import {API_URL} from 'config/constants'
+import { IPlayerResponse } from 'interfaces/player-interface'
+
+interface IParamsInterface {
+  id: string
+}
 
 const PlayersTab = () => {
-  const {id} = useParams()
-  const [currentPlayer, setCurrentPlayer] = useState({})
+  const {id} = useParams<IParamsInterface>()
+  const [currentPlayer, setCurrentPlayer] = useState<IPlayerResponse | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const [players, setPlayers] = useState([])
+  const [players, setPlayers] = useState<IPlayerResponse[]>([])
 
   const getPlayers = async () => {
-    const response =  await axios.get(`${API_URL}/game/${id}/players/`)
+    const response: AxiosResponse<IPlayerResponse[]> =  await axios.get(`${API_URL}/game/${id}/players/`)
     return response.data
   }
 
@@ -23,7 +28,7 @@ const PlayersTab = () => {
     }
   }
 
-  const handleClickEdit = (player) => {
+  const handleClickEdit = (player: IPlayerResponse) => {
     setCurrentPlayer(player)
     setModalOpen(true);
   };
@@ -39,7 +44,9 @@ const PlayersTab = () => {
     const playerId = player.id
     const response = await axios.delete(`${API_URL}/game/players/${playerId}/`);
     if (response.status === 204) {
-      getPlayers().then(data => setPlayers(data))
+      const data = await getPlayers()
+      setPlayers(data)
+      // getPlayers().then(data => setPlayers(data))
     } else {
       console.log('Error occured when deleting player')
     }

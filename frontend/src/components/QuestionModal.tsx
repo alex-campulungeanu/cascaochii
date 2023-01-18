@@ -4,7 +4,17 @@ import {Box,  Dialog, DialogContent, DialogTitle, DialogActions, Button, Grid, T
 import {useFormik, Formik} from 'formik'
 import * as yup from 'yup'
 
-const QuestionModal = ({open, onSubmit, handleClose, question}) => {
+import { IQuestionInterface } from 'interfaces/question-interface'
+
+// TODO: fix handleClose: any
+interface IQuestionModalProps {
+  open: boolean,
+  onSubmit: (values: any) => void,
+  handleClose: any,
+  question: IQuestionInterface | null,
+}
+
+const QuestionModal: React.FC<IQuestionModalProps> = ({open, onSubmit, handleClose, question}) => {
   const isNew = question ? false : true
 
   const handleSubmit = (values) => {
@@ -22,16 +32,16 @@ const QuestionModal = ({open, onSubmit, handleClose, question}) => {
           <DialogContent>
             <Formik
               initialValues={{
-                id: !isNew ? question.id : '',
-                name: !isNew ? question.name : '',
-                info: !isNew ? question.info : '',
-                body: !isNew ? question.body : '',
-                video_timestamp: !isNew ? question.video_timestamp : '',
+                id: !isNew ? question?.id : '',
+                name: !isNew ? question?.name : '',
+                info: !isNew ? question?.info : '',
+                body: !isNew ? question?.body : '',
+                video_timestamp: !isNew ? question?.video_timestamp : '',
               }}
               validationSchema={yup.object().shape({
                 name: yup.string().max(100).required('Name is required'),
               })}
-              onSubmit={(values, actions) => handleSubmit(values, actions)}
+              onSubmit={(values, actions) => handleSubmit(values)}
             >
               {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
                 <form onSubmit={handleSubmit}>
@@ -56,7 +66,7 @@ const QuestionModal = ({open, onSubmit, handleClose, question}) => {
                       value={values.name}
                       onChange={handleChange}
                       error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && errors.name}
+                      helperText={touched.name && String(errors.name)}
                     />
                     <TextField
                       fullWidth
@@ -66,7 +76,7 @@ const QuestionModal = ({open, onSubmit, handleClose, question}) => {
                       value={values.info}
                       onChange={handleChange}
                       error={touched.info && Boolean(errors.info)}
-                      helperText={touched.info && errors.info}
+                      helperText={touched.info && String(errors.info)}
                     />
                     <TextField
                       fullWidth
@@ -76,7 +86,7 @@ const QuestionModal = ({open, onSubmit, handleClose, question}) => {
                       value={values.body}
                       onChange={handleChange}
                       error={touched.body && Boolean(errors.body)}
-                      helperText={touched.body && errors.body}
+                      helperText={touched.body && String(errors.body)}
                     />
                     <TextField
                       fullWidth
@@ -86,12 +96,17 @@ const QuestionModal = ({open, onSubmit, handleClose, question}) => {
                       value={values.video_timestamp}
                       onChange={handleChange}
                       error={touched.video_timestamp && Boolean(errors.video_timestamp)}
-                      helperText={touched.video_timestamp && errors.video_timestamp}
+                      helperText={touched.video_timestamp && String(errors.video_timestamp)}
                     />
                   </Box>
                   <DialogActions sx={{mt: 4}}>
                     <Grid container justifyContent='space-between'>
-                      <Button onClick={handleClose} color='secondary'>CANCEL</Button>
+                      <Button 
+                        onClick={handleClose} 
+                        color='secondary'
+                      >
+                        CANCEL
+                      </Button>
                       <Button
                         // onClick={handleClose}
                         type="submit"

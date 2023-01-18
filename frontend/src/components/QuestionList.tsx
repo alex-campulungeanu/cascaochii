@@ -8,8 +8,14 @@ import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 import usePersistState from '../hooks/usePersistState'
+import { IQuestionInterface } from 'interfaces/question-interface';
 
-const QuestionList = (props) => {
+interface IQuestionListProps {
+  questions: IQuestionInterface[],
+  getTime: (time: number) => void
+}
+
+const QuestionList = (props: IQuestionListProps) => {
   //TODO: logic with preserving last accordion opened should be improved
   const [currentQuestionExpanded, setCurrentQuestionExpanded] = usePersistState('currentQuestionId', {'questionId': false})
   const [expanded, setExpanded] = useState(currentQuestionExpanded.questionId || false);

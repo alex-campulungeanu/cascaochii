@@ -25,7 +25,7 @@ const ChangeScoreModal = ({open, onSubmit, handleClose, currentPlayer}) => {
             <Controller
               name='score'
               control={control}
-              type="number"
+              // type="number"
               defaultValue={currentPlayer.score}
               render={({ field: { onChange, value }}) => {
                 return (

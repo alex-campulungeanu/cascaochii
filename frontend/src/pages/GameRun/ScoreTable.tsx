@@ -8,19 +8,28 @@ import {useParams} from 'react-router-dom'
 // import ChangeScorModal from 'components/ChangeScoreModal'
 import {API_URL} from '../../config/constants'
 import Podium from 'components/Podium/index'
+import { IPlayerResponse } from 'interfaces/player-interface'
+
+interface IParamsInterface {
+  id: string
+}
 
 const ScoreTable = () => {
-  const {id} = useParams()
+  const {id} = useParams<IParamsInterface>()
   // const [open, setOpen] = React.useState(false);
-  const [allPlayers, setAllPlayers] = useState([])
+  // TODO: fix the any
+  const [allPlayers, setAllPlayers] = useState<IPlayerResponse[]>([])
   // const [currentPlayer, setCurrentPlayer] = useState({});
 
   const getAllPlayers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/game/${id}/players/`);
-      return response.data;
+      const response: any = await axios.get(`${API_URL}/game/${id}/players/`);
+      return  response.data;
     } catch (e) {
-      console.error(e.message);
+      // TODO: how can i get the e.message without typescript yelling at me
+      // https://timmousk.com/blog/typescript-try-catch/
+      console.log(e)
+      console.log('[+] Some error when fetching getAllPlayers')
     }
   };
 

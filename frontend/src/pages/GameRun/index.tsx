@@ -2,13 +2,14 @@ import { Divider, Tabs, Tab, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { useState, useEffect } from 'react'
 import {useParams} from 'react-router-dom'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import Questions from './Questions'
 import ScoreTable from './ScoreTable'
-import Video from '../../components/Video'
+import Video from 'components/Video'
 import Prize from './Prize'
-import {API_URL} from '../../config/constants'
+import {API_URL} from 'config/constants'
+import { IGameInterfaceApi } from 'interfaces/game-interface'
 
 const tabs = [
   {value: 'video', label: 'Video'},
@@ -17,13 +18,17 @@ const tabs = [
   {value: 'prize', label: 'Prize'},
 ]
 
+interface IParamsInterface {
+  id: string
+}
+
 const Game = () => {
-  const { id } = useParams();
+  const { id } = useParams<IParamsInterface>();
   const [currentTab, setCurrentTab] = useState('players')
-  const [game, setGame] = useState(null)
+  const [game, setGame] = useState<IGameInterfaceApi | null>(null)
 
   const getGame = async () => {
-    const response = await axios.get(`${API_URL}/game/games/${id}/`)
+    const response: AxiosResponse<IGameInterfaceApi> = await axios.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 
@@ -31,13 +36,14 @@ const Game = () => {
     getGame().then(game => setGame(game))
   }, [])
 
-  const handleTabsChange = (event, newValue) => {
+  const handleTabsChange = (event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue)
   }
 
   return (
     <>
       <Box sx={{ marginLeft: '30px'}}>
+        <Box>{game?.name}</Box>
         <Box mt={3}>
           <Tabs 
             value={currentTab}

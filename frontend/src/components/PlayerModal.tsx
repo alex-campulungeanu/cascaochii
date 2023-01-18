@@ -45,9 +45,11 @@ const PlayerModal = ({open, onSubmit, handleClose, player}) => {
               validationSchema={yup.object().shape({
                 name: yup.string().max(100).required('Name is required'),
               })}
-              onSubmit={(values, actions) => handleSubmit(values, actions)}
+              onSubmit={(values, actions) => handleSubmit(values)}
             >
-              {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
+              {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => {
+                console.log(typeof errors.name)
+                return (
                 <form onSubmit={handleSubmit}>
                   <Box
                     component="form"
@@ -71,7 +73,7 @@ const PlayerModal = ({open, onSubmit, handleClose, player}) => {
                       value={values.name}
                       onChange={handleChange}
                       error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && errors.name}
+                      helperText={touched.name && String(errors.name)}
                     />
                   </Box>
                   <DialogActions sx={{mt: 4}}>
@@ -88,62 +90,11 @@ const PlayerModal = ({open, onSubmit, handleClose, player}) => {
                     </Grid>
                   </DialogActions>
                 </form>
-              )}
+              )}}
             </Formik>
           </DialogContent>
         </Dialog>
       </Box>
-
-
-
-    // <>
-    //   <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-    //     <DialogTitle>Add player <b>{player.name}</b></DialogTitle>
-    //     {/* <br /> */}
-    //     <DialogContent>
-    //       <form onSubmit={handleSubmit(onSubmit)} id="changeScoreForm">
-    //         <TextField
-    //           sx={{ display: 'none'}}
-    //           value={player ? player.id : -1}
-    //           {...register('id')}
-    //         />
-    //         <Controller
-    //           name='name'
-    //           control={control}
-    //           type="number"
-    //           defaultValue={player.score}
-    //           render={({ field: { onChange, value }}) => {
-    //             return (
-    //               <Grid sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-    //                 <TextField
-    //                   sx={{width: '6rem'}}
-    //                   type='text' 
-    //                   // inputProps={{ inputMode: 'text', pattern: '[0-9]*' }} 
-    //                   onChange={onChange}
-    //                   value={value}
-    //                 />
-    //               </Grid>
-    //             )
-    //           }}
-    //         />
-    //       </form>
-    //     </DialogContent>
-    //     <DialogActions>
-    //       <Grid container justifyContent='space-between'>
-    //         <Button onClick={handleClose} color='secondary'>M-am razgandit</Button>
-    //         <Button 
-    //           onClick={handleClose}
-    //           type="submit"
-    //           form='changeScoreForm'
-    //           color='primary'
-    //           variant='contained'
-    //         >
-    //           Salveaza
-    //         </Button>
-    //       </Grid>
-    //     </DialogActions>
-    //   </Dialog>
-    // </>
   )
 }
 export default PlayerModal

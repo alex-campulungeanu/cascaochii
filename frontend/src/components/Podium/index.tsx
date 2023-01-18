@@ -2,11 +2,15 @@ import React from 'react'
 
 import PodiumStep from 'components/Podium/PodiumStep'
 
-const Podium = ({players}) => {
-  const createPodium = (len) => {
-    let half1 = []
-    let half2 = []
-    let res = []
+interface IPodiumProps {
+  players: any //fix this any
+}
+
+const Podium = ({players}: IPodiumProps) => {
+  const createPodium = (len: number): number[] => {
+    let half1: number[] = []
+    let half2: number[] = []
+    let res: number[] = []
     for (let i = len; i >= 0; i--) {
       if (i % 2 == 0) {
         half1.push(i)
@@ -17,12 +21,16 @@ const Podium = ({players}) => {
     res = half1.concat(half2)
     return res
   }
+
   const playersOrdered = players
     .sort((a, b) => { return b.score - a.score})
     .map((player, position) => ({ ...player, position }))
+  
+  // TODO: fix podiumOrder: any[]
   const podium = createPodium(playersOrdered.length)
-    .reduce((podiumOrder, position) => [...podiumOrder, playersOrdered[position]], [])
+    .reduce((podiumOrder: any[], position: number) => [...podiumOrder, playersOrdered[position]], [])
     .filter(Boolean)
+
   return (
     <div
       style={{

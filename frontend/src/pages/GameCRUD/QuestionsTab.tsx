@@ -2,29 +2,34 @@ import React, {useState, useEffect} from 'react'
 import { Button, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {useParams} from 'react-router-dom'
 
 import QuestionModal from 'components/QuestionModal'
 import QuestionForm from 'components/QuestionForm'
 import {API_URL} from 'config/constants'
+import { IQuestionInterface } from 'interfaces/question-interface'
+
+interface IParamsInterface {
+  id: string
+}
 
 const QuestionsTab = () => {
-  const {id} = useParams()
-  const [currentQuestion, setCurrentQuestion] = useState({})
+  const { id } = useParams<IParamsInterface>()
+  const [currentQuestion, setCurrentQuestion] = useState<IQuestionInterface | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const [questions, setQuestions] = useState([])
+  const [questions, setQuestions] = useState<IQuestionInterface[]>([])
   // const [currentQuestionExpanded, setCurrentQuestionExpanded] = usePersistState('currentQuestionId', {'questionId': false})
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(0);
   
   const handleChange = (question) => (event, isExpanded) => {
-    setExpanded(isExpanded ? question.id : false);
+    setExpanded(isExpanded ? question.id : 0);
     // setCurrentQuestion(question)
     // setCurrentQuestionExpanded({'questionId': questionId})
   };
 
   const getQuestions = async () => {
-    const response =  await axios.get(`${API_URL}/game/${id}/questions/`)
+    const response: AxiosResponse<IQuestionInterface[]> =  await axios.get(`${API_URL}/game/${id}/questions/`)
     return response.data
   }
 
@@ -35,7 +40,7 @@ const QuestionsTab = () => {
   }
 
   const handleCancel = () => {
-    setExpanded(false)
+    setExpanded(0)
   }
 
   const handleNewQuestion = () => {
@@ -44,7 +49,7 @@ const QuestionsTab = () => {
   }
 
   useEffect(() => {
-    getQuestions().then(setQuestions(data => data))
+    getQuestions().then(data => setQuestions(data))
   }, [])
 
 
@@ -136,7 +141,7 @@ const QuestionsTab = () => {
       </Paper>
       
     <QuestionModal 
-      player={currentQuestion}
+      question={currentQuestion}
       open={modalOpen}
       handleClose={handleClose}
       onSubmit={handleSubmit}

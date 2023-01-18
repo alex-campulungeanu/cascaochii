@@ -33,7 +33,7 @@ const QuestionForm = ({question, onSubmit, onCancel, onDelete}) => {
         body: yup.string().max(100).required('Body is required'),
         video_timestamp: yup.string().max(100).required('Timestamp is required'),
       })}
-      onSubmit={(values, actions) => handleSubmit(values, actions)}
+      onSubmit={(values, actions) => handleSubmit(values)}
     >
       {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
         <form onSubmit={handleSubmit}>
@@ -59,7 +59,7 @@ const QuestionForm = ({question, onSubmit, onCancel, onDelete}) => {
               value={values.name}
               onChange={handleChange}
               error={touched.name && Boolean(errors.name)}
-              helperText={touched.name && errors.name}
+              helperText={touched.name && String(errors.name)}
             />
             <TextField
               fullWidth
@@ -69,7 +69,7 @@ const QuestionForm = ({question, onSubmit, onCancel, onDelete}) => {
               value={values.info}
               onChange={handleChange}
               error={touched.info && Boolean(errors.info)}
-              helperText={touched.info && errors.info}
+              helperText={touched.info && String(errors.info)}
             />
             <TextField
               fullWidth
@@ -79,7 +79,7 @@ const QuestionForm = ({question, onSubmit, onCancel, onDelete}) => {
               value={values.body}
               onChange={handleChange}
               error={touched.body && Boolean(errors.body)}
-              helperText={touched.body && errors.body}
+              helperText={touched.body && String(errors.body)}
             />
             <TextField
               fullWidth
@@ -89,7 +89,7 @@ const QuestionForm = ({question, onSubmit, onCancel, onDelete}) => {
               value={values.video_timestamp}
               onChange={handleChange}
               error={touched.video_timestamp && Boolean(errors.video_timestamp)}
-              helperText={touched.video_timestamp && errors.video_timestamp}
+              helperText={touched.video_timestamp && String(errors.video_timestamp)}
             />
           </Box>
           <DialogActions sx={{mt: 4}}>

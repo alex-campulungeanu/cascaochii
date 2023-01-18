@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from drf_yasg.utils import swagger_auto_schema
 
 from game.models import Game, Question, Player
 from game.serializers import GameSerializer, PlayerSerializer, QuestionSerializer
@@ -74,7 +75,7 @@ class GameDetail(APIView):
         logger.info(f'Delete game with id: {pk}')
         game: Game = self.get_object(pk)
         game.delete()
-        return Response(f'Game {game.name} deleted', status=status.HTTP_204_NO_CONTENT)
+        return Response(f'Game {game.name} deleted', status=status.HTTP_200_OK)
 
 class QuestionList(APIView):
     def get(self, request, format=None):
@@ -146,6 +147,7 @@ class PlayerList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GamePlayerList(APIView):
+    @swagger_auto_schema(responses={status.HTTP_200_OK: PlayerSerializer(many=True)})
     def get(self, request, pk, format=None):
         logger.info(f'Fetching all players from game: {pk}')
         players: QuerySet[Player] = Player.objects.all().filter(game=pk).order_by('id')
@@ -164,7 +166,8 @@ class PlayerDetail(APIView):
         player: Player = self.get_object(pk)
         serializer: PlayerSerializer = PlayerSerializer(player)
         return Response(serializer.data)
-
+    
+    @swagger_auto_schema(request_body=PlayerSerializer)
     def put(self, request, pk, format=None):
         logger.info(f'Updating player with id: {pk}')
         player: Player= self.get_object(pk)

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
 import { FormikProvider, useFormik, Form } from 'formik'
 import * as yup from 'yup'
@@ -9,28 +9,28 @@ import { LoadingButton } from '@mui/lab'
 import { Link as RouterLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import AuthContext from 'context/AuthContext'
+import AuthContex, {useAuth} from 'context/AuthContext'
 import { easing, animate } from 'utils/animation'
 
 const LoginForm = ({formType}) => {
   const isLogin = formType === 'login'
   const isRegister = formType === 'register'
-  const { loginUser, registerUser, user } = useContext(AuthContext)
+  const { loginUser, registerUser, user } = useAuth()
   const [ showPassword, setShowPassword] = useState(false)
   const [ apiError, setApiError] = useState('')
 
   const validationSchema = yup.object({
     ...(isRegister && {firstName: yup
-      .string('Enter your first name')
+      .string()
       .required('First name is required')}),
     ...(isRegister && {lastName: yup
-      .string('Enter your last name')
+      .string()
       .required('Last name is required')}),
     username: yup
-      .string('Enter your username')
+      .string()
       .required('Username is required'),
     password: yup
-      .string('Enter password')
+      .string()
       // .min(8, 'Password should be 8 char min')
       .required('Password is required')
   })
@@ -97,7 +97,7 @@ const LoginForm = ({formType}) => {
               gap: 3
             }}
             component={motion.div}
-            initial={{opacty: 0, y: 40}}
+            // initial={{opacty: 0, y: 40}}
             animate={animate}
           >
             {isRegister ? 

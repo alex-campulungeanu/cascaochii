@@ -3,7 +3,7 @@ import * as Colors from '@mui/material/colors'
 
 const theme = createTheme({
   palette: {
-    text: Colors.blue,
+    // text: Colors.blue,
     primary: {
       main: '#24778c',
       // darker: '#053e85',
@@ -12,7 +12,7 @@ const theme = createTheme({
       main: '#5e914c',
       // darker: '#053e85',
     },
-    alternateTextColor: Colors.red
+    // alternateTextColor: Colors.red
   },
   components: {
     MuiTableHead: {

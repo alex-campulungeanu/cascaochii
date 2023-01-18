@@ -6,9 +6,12 @@ import {Grid, Card, CardContent, TextField, Button} from '@mui/material'
 import {makeStyles} from '@mui/styles'
 import axios from 'axios'
 import {useHistory, useParams} from 'react-router-dom'
+import { AxiosResponse } from 'axios'
 
 import {DirectionSnackbar}  from 'components/DirectionSnackbar'
 import {API_URL} from 'config/constants'
+import { IGameInterfaceApi } from 'interfaces/game-interface'
+import { axiosInstance } from 'lib/axiosInstance'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -26,29 +29,33 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+type ParamsInterface = {
+  id: string
+}
+
 const GameForm = () => {
   const classes = useStyles()
   const history = useHistory()
   const [openSnack, setOpenSnack] = useState(false)
-  const [game, setGame] = useState(null)
-  const {id} = useParams()
-  const isNew = id ? false: true
+  const [game, setGame] = useState<IGameInterfaceApi | null>(null)
+  const {id} = useParams<ParamsInterface>()
+  const isNew: boolean = id ? false: true
 
-  const getGame = async () => {
-    const response = await axios.get(`${API_URL}/game/games/${id}/`)
+  const getGame = async (): Promise<IGameInterfaceApi> => {
+    const response: AxiosResponse<IGameInterfaceApi> = await axiosInstance.get(`${API_URL}/game/games/${id}/`)
     return response.data
   }
 
   useEffect(() => {
     if (!isNew) {
-      getGame().then(game => setGame(game))
+      getGame().then((game: IGameInterfaceApi) => setGame(game))
     }
   }, [])
 
   const handleSubmitGame = async (values, actions) => {
     const postData = values
     if (isNew) {
-      const response = await axios.post(`${API_URL}/game/games/`, postData)
+      const response: AxiosResponse<IGameInterfaceApi> = await axios.post(`${API_URL}/game/games/`, postData)
       if (response.status === 201) {
         actions.resetForm()
         const newGameId = response.data.id
@@ -100,7 +107,7 @@ const GameForm = () => {
                         onChange={handleChange}
                         value={values.name}
                         error={Boolean(touched.name && errors.name)}
-                        helperText={touched.name && errors.name}
+                        helperText={touched.name && String(errors.name)}
                       />
                       <Box mt={3}>
                         <TextField 
@@ -111,7 +118,7 @@ const GameForm = () => {
                           onChange={handleChange}
                           value={values.url} 
                           error={Boolean(touched.url && errors.url)}
-                          helperText={touched.url && errors.url}/>
+                          helperText={touched.url && String(errors.url)}/>
                       </Box>
                       <Box mt={3}>
                         <TextField 
