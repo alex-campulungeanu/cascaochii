@@ -3,7 +3,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
-class Game(models.Model):
+class GameModel(models.Model):
+    class Meta:
+        db_table = "game_game"
     name = models.CharField(max_length=100, unique=True)
     url = models.CharField(max_length=256, unique=True)
     description = models.CharField(max_length=1000, blank=True)
@@ -17,7 +19,9 @@ class Game(models.Model):
     def __str__(self) -> str:
         return f'{self.name} {self.url}'
 
-class Question(models.Model):
+class QuestionModel(models.Model):
+    class Meta:
+        db_table = "game_question"
     name = models.CharField(max_length=500, blank=False)
     info = models.CharField(max_length=500)
     body = models.CharField(max_length=500, blank=False)
@@ -28,9 +32,12 @@ class Question(models.Model):
             MaxValueValidator(1),
             MinValueValidator(0)
         ])
-    game=models.ForeignKey(Game, on_delete=models.DO_NOTHING, related_name="questions")
+    game=models.ForeignKey(GameModel, on_delete=models.DO_NOTHING, related_name="questions")
 
-class Player(models.Model):
+class PlayerModel(models.Model):
+    class Meta:
+        db_table = "game_player"
     name = models.CharField(max_length=100, blank=False)
     score = models.IntegerField(default=0)
-    game=models.ForeignKey(Game, on_delete=models.DO_NOTHING, related_name='players')
+    # TODO: should use a manytomany relation between player and game
+    game = models.ForeignKey(GameModel, on_delete=models.DO_NOTHING, related_name='players')

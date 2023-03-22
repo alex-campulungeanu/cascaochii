@@ -10,8 +10,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from drf_yasg.utils import swagger_auto_schema
 
-from game.models import Game, Question, Player
+from game.models import GameModel, QuestionModel, PlayerModel
 from game.serializers import GameSerializer, PlayerSerializer, QuestionSerializer
+from utils.permissions import method_permission_classes
+from game.permissions import UserCanAddGame
 
 # Create your views here.
 
@@ -34,9 +36,11 @@ from game.serializers import GameSerializer, PlayerSerializer, QuestionSerialize
 #     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class GameList(APIView):
+    # permission_classes = [UserCanAddGame]
+    @method_permission_classes((UserCanAddGame,))
     def get(self, request, format=None):
         logger.info(f'Fetching all games')
-        games: QuerySet[Game] = Game.objects.all()
+        games: QuerySet[GameModel] = GameModel.objects.all()
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 
@@ -52,19 +56,19 @@ class GameList(APIView):
 class GameDetail(APIView):
     def get_object(self, pk):
         try:
-            return Game.objects.get(pk=pk)
-        except Game.DoesNotExist:
+            return GameModel.objects.get(pk=pk)
+        except GameModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         logger.info(f'Fetch game with id {pk}')
-        game: Game = self.get_object(pk)
+        game: GameModel = self.get_object(pk)
         serializer: GameSerializer = GameSerializer(game)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         logger.info(f'Updating game with id: {pk}')
-        game: Game= self.get_object(pk)
+        game: GameModel= self.get_object(pk)
         serializer = GameSerializer(game, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -73,14 +77,14 @@ class GameDetail(APIView):
     
     def delete(self, request, pk, format=None):
         logger.info(f'Delete game with id: {pk}')
-        game: Game = self.get_object(pk)
+        game: GameModel = self.get_object(pk)
         game.delete()
         return Response(f'Game {game.name} deleted', status=status.HTTP_200_OK)
 
 class QuestionList(APIView):
     def get(self, request, format=None):
         logger.info(f'Fetching all questions')
-        questions: QuerySet[Question] = Question.objects.all()
+        questions: QuerySet[QuestionModel] = QuestionModel.objects.all()
         serializer =QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
@@ -97,26 +101,26 @@ class QuestionList(APIView):
 class GameQuestionList(APIView):
     def get(self, request, pk, format=None):
         logger.info(f'Fetching all questions from game: {pk}')
-        questions: QuerySet[Question] = Question.objects.all().filter(game=pk)
+        questions: QuerySet[QuestionModel] = QuestionModel.objects.all().filter(game=pk)
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
 class QuestionDetail(APIView):
     def get_object(self, pk):
         try:
-            return Question.objects.get(pk=pk)
-        except Question.DoesNotExist:
+            return QuestionModel.objects.get(pk=pk)
+        except QuestionModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         logger.info(f'Fetch question with id {pk}')
-        question: Game = self.get_object(pk)
+        question: QuestionModel = self.get_object(pk)
         serializer: QuestionSerializer = QuestionSerializer(question)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         logger.info(f'Updating game with id: {pk}')
-        question: Question= self.get_object(pk)
+        question: QuestionModel= self.get_object(pk)
         serializer = QuestionSerializer(question, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -125,7 +129,7 @@ class QuestionDetail(APIView):
     
     def delete(self, request, pk, format=None):
         logger.info(f'Delete questoin with id: {pk}')
-        question: Question = self.get_object(pk)
+        question: QuestionModel = self.get_object(pk)
         question.delete()
         return Response(f'Question {question.name} deleted', status=status.HTTP_204_NO_CONTENT)
 
@@ -133,7 +137,7 @@ class QuestionDetail(APIView):
 class PlayerList(APIView):
     def get(self, request, format=None):
         logger.info(f'Fetching all players')
-        players: QuerySet[Player] = Player.objects.all()
+        players: QuerySet[PlayerModel] = PlayerModel.objects.all()
         serializer = PlayerSerializer(players, many=True)
         return Response(serializer.data)
 
@@ -150,27 +154,27 @@ class GamePlayerList(APIView):
     @swagger_auto_schema(responses={status.HTTP_200_OK: PlayerSerializer(many=True)})
     def get(self, request, pk, format=None):
         logger.info(f'Fetching all players from game: {pk}')
-        players: QuerySet[Player] = Player.objects.all().filter(game=pk).order_by('id')
+        players: QuerySet[PlayerModel] = PlayerModel.objects.all().filter(game=pk).order_by('id')
         serializer = PlayerSerializer(players, many=True)
         return Response(serializer.data)
 
 class PlayerDetail(APIView):
     def get_object(self, pk):
         try:
-            return Player.objects.get(pk=pk)
-        except Player.DoesNotExist:
+            return PlayerModel.objects.get(pk=pk)
+        except PlayerModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         logger.info(f'Fetch player with id {pk}')
-        player: Player = self.get_object(pk)
+        player: PlayerModel = self.get_object(pk)
         serializer: PlayerSerializer = PlayerSerializer(player)
         return Response(serializer.data)
     
     @swagger_auto_schema(request_body=PlayerSerializer)
     def put(self, request, pk, format=None):
         logger.info(f'Updating player with id: {pk}')
-        player: Player= self.get_object(pk)
+        player: PlayerModel= self.get_object(pk)
         serializer = PlayerSerializer(player, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -179,6 +183,6 @@ class PlayerDetail(APIView):
     
     def delete(self, request, pk, format=None):
         logger.info(f'Delete player with id: {pk}')
-        player: Player = self.get_object(pk)
+        player: PlayerModel = self.get_object(pk)
         player.delete()
         return Response(f'Player {player.name} deleted', status=status.HTTP_204_NO_CONTENT)

@@ -1,5 +1,5 @@
 const getLocalAccessToken = () => {
-  const access = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens') || '{}').access : null
+  const access = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo') || '{}').access : null
   return access
 }
 

@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from accounts.models import RoleModel
+
+class RolesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoleModel
+        fields =  ('name',)
+
 class UserSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
@@ -8,6 +15,7 @@ class UserSerializer(serializers.Serializer):
     last_name = serializers.CharField(read_only=True)
     active = serializers.IntegerField(read_only=True)
     username = serializers.CharField(read_only=True)
+    roles = RolesSerializer(many=True)
 
 class UserSerializerWithToken(UserSerializer):
     access = serializers.SerializerMethodField(read_only=True)

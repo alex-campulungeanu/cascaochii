@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'accounts',
-    'game',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'accounts',
+    'game',
 ]
 
 REST_FRAMEWORK = {
@@ -57,8 +57,13 @@ REST_FRAMEWORK = {
     )
 }
 
+if env('DJANGO_DEVELOPMENT') == 'true':
+    token_life_min = 1000
+else:
+    token_life_min = 5
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=token_life_min), # initial 5
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -103,7 +108,7 @@ MIDDLEWARE = [
 # Auth user
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-ROOT_URLCONF = 'cascaochii.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -121,7 +126,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cascaochii.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
