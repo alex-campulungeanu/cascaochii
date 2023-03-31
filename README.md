@@ -64,6 +64,7 @@ https://stackoverflow.com/questions/51577441/how-to-seed-django-project-insert-a
   - [x] sa fac un layout pentru topbar
   - [ ] move to vite
   - [ ] sa prind erorile 401 cumva
+  - [ ] de vazut de ce se fac 2 requesturi pentru token/refresh
   - [ ] de vazut de ce nu merge jsconfig.json partea cu pathurile @...
   - [ ] cand adaug o intrebare si pun timestampul de genul 2:30 sa transform automat in 150 secunde
   - [ ] sa prind si sa afisez raspunsul cand incerc sa adaug un game care exista
