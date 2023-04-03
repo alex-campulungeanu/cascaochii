@@ -2,13 +2,12 @@ import React, {useState, useRef, useMemo, useEffect} from 'react'
 import { Button, Modal, Paper, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import axios from 'axios'
 import {useParams} from 'react-router-dom'
 
 // import ChangeScorModal from 'components/ChangeScoreModal'
-import {API_URL} from '../../config/constants'
 import Podium from 'components/Podium/index'
-import { IPlayerResponse } from 'interfaces/player-interface'
+import { IPlayerGameResponse } from 'interfaces/player-interface'
+import { getPlayersForGame, updateGamePlayerDetails } from 'services/players.service'
 
 interface IParamsInterface {
   id: string
@@ -17,14 +16,13 @@ interface IParamsInterface {
 const ScoreTable = () => {
   const {id} = useParams<IParamsInterface>()
   // const [open, setOpen] = React.useState(false);
-  // TODO: fix the any
-  const [allPlayers, setAllPlayers] = useState<IPlayerResponse[]>([])
+  const [allPlayers, setAllPlayers] = useState<IPlayerGameResponse[]>([])
   // const [currentPlayer, setCurrentPlayer] = useState({});
 
   const getAllPlayers = async () => {
     try {
-      const response: any = await axios.get(`${API_URL}/game/${id}/players/`);
-      return  response.data;
+      const response: any = await getPlayersForGame(id);
+      return response.data;
     } catch (e) {
       // TODO: how can i get the e.message without typescript yelling at me
       // https://timmousk.com/blog/typescript-try-catch/
@@ -44,13 +42,16 @@ const ScoreTable = () => {
   //   setOpen(true);
   // };
   
-  const handleChangeScore = async (player, quantity) => {
+  const handleChangeScore = async (player: IPlayerGameResponse, quantity) => {
     const data = {
       ...player,
       score: player.score + quantity
     }
-    const response = await axios.put(`${API_URL}/game/players/${player.id}/`, data);
-    getAllPlayers().then((data) => setAllPlayers(data))
+    // const response = await axios.put(`${API_URL}/game/players/${player.id}/`, data);
+    const response = await updateGamePlayerDetails(id, data)
+    const dbPlayers = await getAllPlayers()
+    setAllPlayers(dbPlayers)
+    // getAllPlayers().then((data) => setAllPlayers(data))
   }
 
   // const handleClose = (event, reason) => {
@@ -87,7 +88,7 @@ const ScoreTable = () => {
                   key={`${i}`}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{item.name}</TableCell>
+                  <TableCell component="th" scope="row">{item.player_name}</TableCell>
                   <TableCell>{item.score}</TableCell>
                   <TableCell>
                     <Button

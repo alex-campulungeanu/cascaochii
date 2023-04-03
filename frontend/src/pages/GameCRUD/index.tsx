@@ -24,7 +24,7 @@ interface ParamsInterface {
 
 const index = () => {
   const { id } = useParams<ParamsInterface>();
-  const [currentTab, setCurrentTab] = useState('game')
+  const [currentTab, setCurrentTab] = useState('players')
   const [game, setGame] = useState<IGameInterfaceApi | null>(null)
 
   const getGame = async (): Promise<IGameInterfaceApi> => {
@@ -42,7 +42,7 @@ const index = () => {
 
   return (
     <>
-      <Box sx={{ width: '100%', ml: 3}}>
+      <Box sx={{ ml: 3, mr: 4}}>
         <Box mt={3}>
           <Tabs 
             value={currentTab}
@@ -57,7 +57,7 @@ const index = () => {
         </Box>
         <Divider />
         {game && (
-          <Box sx={{ml: 3, mt: 3}}>
+          <Box sx={{ mt: 3}}>
             {/* {currentTab === 'game' && <GameTab game={game} />} */}
             {currentTab === 'game' && <GameTab />}
             {currentTab === 'players' && <PlayersTab />}

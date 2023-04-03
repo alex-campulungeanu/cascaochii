@@ -1,0 +1,7 @@
+.gameDetails {
+  border: 3px solid grey;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}

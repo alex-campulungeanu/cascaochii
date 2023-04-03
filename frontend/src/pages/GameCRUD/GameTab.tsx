@@ -4,9 +4,9 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import {Grid, Card, CardContent, TextField, Button} from '@mui/material'
 import {makeStyles} from '@mui/styles'
-import axios from 'axios'
 import {useHistory, useParams} from 'react-router-dom'
 import { AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
 
 import {DirectionSnackbar}  from 'components/DirectionSnackbar'
 import {API_URL} from 'config/constants'
@@ -55,10 +55,11 @@ const GameForm = () => {
   const handleSubmitGame = async (values, actions) => {
     const postData = values
     if (isNew) {
-      const response: AxiosResponse<IGameInterfaceApi> = await axios.post(`${API_URL}/game/games/`, postData)
+      const response: AxiosResponse<IGameInterfaceApi> = await axiosInstance.post(`${API_URL}/game/games/`, postData)
       if (response.status === 201) {
         actions.resetForm()
         const newGameId = response.data.id
+        toast.success(`Game was created, you can update the details`)
         history.push(`/games/${newGameId}/edit`)
         // setOpenSnack(true)
       } else {
@@ -66,7 +67,7 @@ const GameForm = () => {
       }
     } else {
       console.log('Update game', postData)
-      const response = await axios.put(`${API_URL}/game/games/${id}/`, postData)
+      const response = await axiosInstance.put(`${API_URL}/game/games/${id}/`, postData)
       console.log(response)
     }
   }

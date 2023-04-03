@@ -1,4 +1,4 @@
-import {IPlayerResponse} from 'interfaces/player-interface'
+import {IPlayerGameResponse} from 'interfaces/player-interface'
 import { IQuestionInterface } from 'interfaces/question-interface'
 
 export interface IGameInterfaceApi {
@@ -7,6 +7,6 @@ export interface IGameInterfaceApi {
   url: string,
   description: string,
   questions: IQuestionInterface[],
-  players: IPlayerResponse[],
+  players: IPlayerGameResponse[],
   created_at: string
 }

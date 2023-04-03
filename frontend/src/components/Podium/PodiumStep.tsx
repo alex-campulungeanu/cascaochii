@@ -1,8 +1,15 @@
 import React from 'react'
 import {motion} from 'framer-motion'
 
-const PodiumStep = ({podium, winner}) => {
-  const offset = podium.length - winner.position
+import { IPodiumPlayer } from 'components/Podium'
+
+interface IPodiumStepProps {
+  podium: IPodiumPlayer[];
+  player: IPodiumPlayer;
+}
+
+const PodiumStep = ({podium, player}: IPodiumStepProps) => {
+  const offset = podium.length - player.position
 
   return (
     <div
@@ -31,7 +38,7 @@ const PodiumStep = ({podium, winner}) => {
           hidden: { opacity: 0 }
         }}
       >
-        <div>{winner.name}</div>
+        <div>{player.player_name}</div>
       </motion.div>
 
       <motion.div
@@ -63,7 +70,7 @@ const PodiumStep = ({podium, winner}) => {
         }}
       >
         <span style={{ color: 'white', alignSelf: 'flex-end' }}>
-          {winner.score}
+          {player.score}
         </span>
       </motion.div>
     </div>

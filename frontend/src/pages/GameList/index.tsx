@@ -38,7 +38,6 @@ const GameList = () => {
 
   // TODO: add a confirmation modal
   const handleDeleteGame = async () => {
-    console.log('Should delete with modal')
     if (currentGame != null) {
       const response = await axiosInstance.delete(`${API_URL}/game/games/${currentGame.id}/`)
       if (response.status === 200) {
@@ -55,14 +54,22 @@ const GameList = () => {
     <div>
       <Box sx={{ 
         display: 'flex', 
-        flexDirection: 'row-reverse',
+        flexDirection: 'row',
         m: 4 }}>
         <Button 
           variant="contained"
           component={Link}
           to="/games/create"
+          sx={{marginRight: '10px'}}
         >
           Add Game
+        </Button>
+        <Button 
+          variant="contained"
+          component={Link}
+          to="/players/create"
+        >
+          Define players
         </Button>
       </Box>
       <Box 

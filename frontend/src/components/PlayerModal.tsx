@@ -1,8 +1,8 @@
 import React from 'react'
-import {Box,  Dialog, DialogContent, DialogTitle, DialogActions, Button, Grid, TextField, DialogContentText} from '@mui/material'
-// import { useForm, Controller } from 'react-hook-form'
+import {Box,  Dialog, DialogContent, DialogTitle, DialogActions, Button, Grid, TextField, DialogContentText, Select, MenuItem, InputLabel} from '@mui/material'
 import {useFormik, Formik} from 'formik'
 import * as yup from 'yup'
+import { IPlayerResponse } from 'interfaces/player-interface'
 
 // const validationSchema = yup.object({
 //   name: yup
@@ -10,7 +10,14 @@ import * as yup from 'yup'
 //     .required('Name is required')
 // })
 
-const PlayerModal = ({open, onSubmit, handleClose, player}) => {
+interface IPlayerModalProps {
+  open: boolean,
+  onSubmit: (values: any) => any,
+  handleClose: () => any,
+  player: IPlayerResponse | null
+}
+
+const PlayerModal = ({open, onSubmit, handleClose, player}: IPlayerModalProps) => {
   const isNew = player ? false : true
 
   // const formik = useFormik({
@@ -39,8 +46,9 @@ const PlayerModal = ({open, onSubmit, handleClose, player}) => {
           <DialogContent>
             <Formik
               initialValues={{
-                id: !isNew ? player.id : '',
-                name: !isNew ? player.name : '',
+                id: !isNew ? player?.id : '',
+                name: !isNew ? player?.name : '',
+                active: !isNew ? player?.active : 1,
               }}
               validationSchema={yup.object().shape({
                 name: yup.string().max(100).required('Name is required'),
@@ -48,33 +56,44 @@ const PlayerModal = ({open, onSubmit, handleClose, player}) => {
               onSubmit={(values, actions) => handleSubmit(values)}
             >
               {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => {
-                console.log(typeof errors.name)
                 return (
                 <form onSubmit={handleSubmit}>
                   <Box
                     component="form"
-                    sx={{
-                      '& .MuiTextField-root': { m: 1},
-                    }}
+                    sx={{marginLeft: 1, marginTop: 2}}
                   >
-                    <TextField
-                      sx={{ display: 'none'}}
-                      id="id"
-                      name="id"
-                      value={values.id}
+                    <Box sx={{marginBottom: 1}}>
+                      <TextField
+                        sx={{ display: 'none'}}
+                        id="id"
+                        name="id"
+                        value={values.id}
+                        onChange={handleChange}
+                        // {...register('id')}
+                      />
+                      <TextField
+                        fullWidth
+                        id="name"
+                        name="name"
+                        label="Player name"
+                        value={values.name}
+                        onChange={handleChange}
+                        error={touched.name && Boolean(errors.name)}
+                        helperText={touched.name && String(errors.name)}
+                      />
+                    </Box>
+                    <Select
+                      // labelId="demo-simple-select-label"
+                      id="active"
+                      name='active'
+                      label="Status"
                       onChange={handleChange}
-                      // {...register('id')}
-                    />
-                    <TextField
-                      fullWidth
-                      id="name"
-                      name="name"
-                      label="Player name"
-                      value={values.name}
-                      onChange={handleChange}
-                      error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && String(errors.name)}
-                    />
+                      value={values.active}
+                      variant="outlined"
+                    >
+                      <MenuItem value={1} key={1}>Active</MenuItem>
+                      <MenuItem value={0} key={0}>Inactive</MenuItem>
+                    </Select>
                   </Box>
                   <DialogActions sx={{mt: 4}}>
                     <Grid container justifyContent='space-between'>

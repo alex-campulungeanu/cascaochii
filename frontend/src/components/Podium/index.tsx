@@ -1,9 +1,14 @@
 import React from 'react'
 
 import PodiumStep from 'components/Podium/PodiumStep'
+import { IPlayerGameResponse } from 'interfaces/player-interface'
 
-interface IPodiumProps {
-  players: any //fix this any
+export interface IPodiumProps {
+  players: IPlayerGameResponse[]
+}
+
+export interface IPodiumPlayer extends IPlayerGameResponse {
+  position: number
 }
 
 const Podium = ({players}: IPodiumProps) => {
@@ -22,12 +27,13 @@ const Podium = ({players}: IPodiumProps) => {
     return res
   }
 
-  const playersOrdered = players
+  // PLAYERS VARIABLE SHOULD NOT BE MUTATED SO WE NEED TO SPREAD THE ARRAY
+  const playersOrdered = [...players]
     .sort((a, b) => { return b.score - a.score})
     .map((player, position) => ({ ...player, position }))
   
   // TODO: fix podiumOrder: any[]
-  const podium = createPodium(playersOrdered.length)
+  const podium: IPodiumPlayer[] = createPodium(playersOrdered.length)
     .reduce((podiumOrder: any[], position: number) => [...podiumOrder, playersOrdered[position]], [])
     .filter(Boolean)
 
@@ -46,8 +52,8 @@ const Podium = ({players}: IPodiumProps) => {
         height: 250
       }}
     >
-      {podium.map((winner) => (
-        <PodiumStep key={winner.id} podium={podium} winner={winner} />
+      {podium.map((player, i) => (
+        <PodiumStep key={player.player_id} podium={podium} player={player} />
       ))}
     </div>
   )

@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react'
-import { Button, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from '@mui/material';
+import { Button, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Autocomplete, TextField, Grid, InputLabel, TableContainer, Card } from '@mui/material';
 import axios, { AxiosResponse } from 'axios'
 import {useParams} from 'react-router-dom'
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import PlayerModal from 'components/PlayerModal'
 import {API_URL} from 'config/constants'
-import { IPlayerResponse } from 'interfaces/player-interface'
+import { IPlayerGameResponse, IPlayerResponse } from 'interfaces/player-interface'
+import { getPlayersForGame, assignPlayerOnGame, updatePlayerOnGame, getAllPlayersService } from 'services/players.service'
 
 interface IParamsInterface {
   id: string
@@ -13,66 +16,45 @@ interface IParamsInterface {
 
 const PlayersTab = () => {
   const {id} = useParams<IParamsInterface>()
-  const [currentPlayer, setCurrentPlayer] = useState<IPlayerResponse | null>(null)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [players, setPlayers] = useState<IPlayerResponse[]>([])
+  const [players, setPlayers] = useState<IPlayerGameResponse[]>([])
+  const [allPlayers, setAllPlayers] = useState<any[]>([])
+  const [newPlayer, setNewPlayer] = useState<IPlayerResponse | null>(null)
 
-  const getPlayers = async () => {
-    const response: AxiosResponse<IPlayerResponse[]> =  await axios.get(`${API_URL}/game/${id}/players/`)
+  const getAllPlayers = async () => {
+    const response: AxiosResponse<IPlayerResponse[]> = await getAllPlayersService()
     return response.data
   }
 
-  const handleClose = (event, reason) => {
-    if (reason !== 'backdropClick') {
-      setModalOpen(false);
-    }
+  const getPlayers = async () => {
+    const response: AxiosResponse<IPlayerGameResponse[]> = await getPlayersForGame(id)
+    return response.data
   }
-
-  const handleClickEdit = (player: IPlayerResponse) => {
-    setCurrentPlayer(player)
-    setModalOpen(true);
-  };
-  
-  const handleNewPlayer = () => {
-    setCurrentPlayer(null)
-    setModalOpen(true);
+  const handleAssignNewPlayer = async () => {
+    const res = await assignPlayerOnGame(id, newPlayer)
+    getPlayers().then(data => setPlayers(data))
+    setNewPlayer(null)
   }
 
   // TODO: add a popup when deleting success or failed
-  const handleDelete = async (player) => {
-    console.log(`delete player with id ${player.id}`)
-    const playerId = player.id
-    const response = await axios.delete(`${API_URL}/game/players/${playerId}/`);
+  const handleDelete = async (player: IPlayerGameResponse) => {
+    const playerId = player.player_id
+    const response = await axios.delete(`${API_URL}/game/${id}/player/${playerId}/delete/`);
     if (response.status === 204) {
       const data = await getPlayers()
       setPlayers(data)
-      // getPlayers().then(data => setPlayers(data))
     } else {
+      console.log(response)
       console.log('Error occured when deleting player')
     }
   }
 
   useEffect(() => {
     getPlayers().then(data => setPlayers(data))
+    getAllPlayers().then(data => setAllPlayers(data))
   }, [])
 
-  const onSubmit = async (formData) => {
-    console.log(formData.id)
-    if (formData.id) {
-      const data = {
-        id: formData.id,
-        name: formData.name,
-        game: id 
-      }
-      const response = await axios.put(`${API_URL}/game/players/${data.id}/`, data);
-    } else {
-      const data = {
-        name: formData.name,
-        game: id 
-      }
-      const response = await axios.post(`${API_URL}/game/players/`, data);
-    }
-    getPlayers().then(data => setPlayers(data))
+  const handleChangePlayer = (value, newValue) => {
+    setNewPlayer(newValue)
   }
 
   return (
@@ -83,43 +65,53 @@ const PlayersTab = () => {
         display: 'flex',
         mb: 2
       }}>
-        <Button 
-          variant="contained"
-          color="secondary"
-          onClick={() => handleNewPlayer()}
-        >
-          Add player
-        </Button>
+        {allPlayers && 
+          <>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={allPlayers}
+              value={newPlayer}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Player" />}
+              onChange = {handleChangePlayer}
+              getOptionLabel={(option: IPlayerResponse) => option.name}
+            />
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleAssignNewPlayer()}
+              startIcon={<AddIcon />}
+              sx={{marginLeft: '15px'}}
+              disabled={!newPlayer}
+            >
+              Add player
+            </Button>
+          </>
+        }
       </Box>
-      <Paper sx={{width: '50%'}}>
+      <Card component={Paper} sx={{ width: '30%' }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><Typography>Name</Typography></TableCell>
-              <TableCell><Typography>Actions</Typography></TableCell>
+              <TableCell width="200" align="left">Name</TableCell>
+              <TableCell width="100" align="left">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {players.map((item, i) => {
               return (
                 <TableRow 
-                  key={`${i}`}
+                  key={`${item.player_id}`}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{item.name}</TableCell>
-                  {/* <TableCell>{item.score}</TableCell> */}
+                  <TableCell component="th" scope="row">{item.player_name}</TableCell>
                   <TableCell>
-                    <Button
-                      onClick={() => handleClickEdit(item)}
-                      color="secondary"
-                    >
-                      Edit
-                    </Button>
                     <Button
                       onClick={() => handleDelete(item)}
                       color="secondary"
                     >
-                      Remove
+                      <DeleteIcon />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -127,15 +119,7 @@ const PlayersTab = () => {
             })}
           </TableBody>
         </Table>
-      </Paper>
-      
-    <PlayerModal 
-      player={currentPlayer}
-      open={modalOpen}
-      handleClose={handleClose}
-      onSubmit={onSubmit}
-    />
-
+      </Card>
     </Box>
   )
 }

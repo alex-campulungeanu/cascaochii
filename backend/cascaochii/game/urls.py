@@ -18,7 +18,12 @@ urlpatterns = [
     path('game/<int:pk>/questions/', views.GameQuestionList.as_view()),
     path('game/questions/<int:pk>/', views.QuestionDetail.as_view()),
 
-    path('game/players/', views.PlayerList.as_view()),
-    path('game/<int:pk>/players/', views.GamePlayerList.as_view()),
-    path('game/players/<int:pk>/', views.PlayerDetail.as_view()),
+    path('game/<int:game_id>/player/assign', views.PlayerList.as_view()),
+    path('game/<int:game_id>/player/update', views.PlayerDetail.as_view()),
+    path('game/<int:game_id>/players/', views.GamePlayerList.as_view()),
+    path('game/<int:game_id>/player/<int:player_id>/delete/', views.GamePlayerList.as_view()),
+    
+    path('game/<int:game_id>/gameplayer/update', views.GamePlayerList.as_view()),
+    
+    path('game/player/<int:player_id>update/', views.PlayerDetail.as_view()),
 ]

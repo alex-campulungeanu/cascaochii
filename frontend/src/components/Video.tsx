@@ -15,5 +15,5 @@ const Video = ({url}) => {
     </div>
   )
 }
-//just a comment
+
 export default Video

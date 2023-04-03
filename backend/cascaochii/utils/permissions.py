@@ -19,11 +19,10 @@ class PermissionUtil:
         if request.user is None:
             return False
         user = request.user
-        logger.info(request.auth)
         try:
             authentication = CustomUser.objects.get(pk=user.id)
         except ObjectDoesNotExist as e:
-            traceback.print_stack()
+            # traceback.print_stack()
             return False
         roles = [role.name for role in authentication.roles.all()]
         # check if any existing roles on user is in the allowed list of roles

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'accounts',
     'game',
+    'housekeeping',
 ]
 
 REST_FRAMEWORK = {
@@ -58,7 +59,7 @@ REST_FRAMEWORK = {
 }
 
 if env('DJANGO_DEVELOPMENT') == 'true':
-    token_life_min = 1000
+    token_life_min = 10000
 else:
     token_life_min = 5
 
@@ -103,6 +104,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    # 'core.middleware.logging_middleware'
 ]
 
 # Auth user
@@ -171,6 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# LOGGING_CONFIG = None
 USE_CUSTOM_LOGGING = False
 
 if USE_CUSTOM_LOGGING: 
@@ -202,6 +205,10 @@ if USE_CUSTOM_LOGGING:
                 'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
                 'propagate': True,
             },
+            # 'django.db.backends': {
+            #     'level': 'DEBUG',
+            #     'handlers': ['console'],
+            # }
         },
     }
 

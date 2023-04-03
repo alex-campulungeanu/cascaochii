@@ -31,8 +31,8 @@ const Questions = ({questions, url}: IQuestionsProps) => {
   }
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'row'}}>
-      <Box>
+    <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+      <Box sx={{width: '100%', marginRight: '20px'}}>
         <QuestionList 
           questions={questions} 
           getTime={setTimeFromQuestion}

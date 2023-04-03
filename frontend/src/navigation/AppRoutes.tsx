@@ -9,6 +9,7 @@ import GameList from '../pages/GameList'
 import GameUpdate from '../pages/GameCRUD/index'
 import GameTab from '../pages/GameCRUD/GameTab'
 import Login from '../pages/Login'
+import PlayersTable from 'pages/Players'
 import PrivateRoute from 'navigation/PrivateRoute'
 import { AuthProvider } from 'context/AuthContext'
 
@@ -21,10 +22,11 @@ const AppRoutes = () => {
           <LayoutContainer layout={MainLayout} isPublic={true}>
             {/* a Switch is needed here for ambigous routing */}
             <Switch>
-              <PrivateRoute path={'/games'} exact component={() => <GameList />} />
+              <PrivateRoute path={'/'} exact component={() => <GameList />} />
               <PrivateRoute path={'/games/create'} exact component={() => <GameTab />} />
               <PrivateRoute path={'/games/:id'} exact component={() => <GameRun />} />
               <PrivateRoute path={'/games/:id/edit'} exact component={() => <GameUpdate />} />
+              <PrivateRoute path={'/players/create'} exact component={() => <PlayersTable />} />
               {/* <Redirect from="/" to="/games" /> */}
             </Switch>
           </LayoutContainer>

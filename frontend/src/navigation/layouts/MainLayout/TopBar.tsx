@@ -49,7 +49,7 @@ const TopBar = () => {
         <Toolbar disableGutters>
           {/* LEFT MENU */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} >
-            <RouterLink to="/games">
+            <RouterLink to="/">
               <Box sx={{marginRight: '20px'}}>
                 <Logo />
               </Box>
@@ -111,7 +111,7 @@ const TopBar = () => {
           </Box>
 
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} >
-            <RouterLink to="/games">
+            <RouterLink to="/">
               <Box sx={{paddingRight: '20px'}}>
                 <Logo />
               </Box>

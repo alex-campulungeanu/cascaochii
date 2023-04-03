@@ -73,9 +73,9 @@ const LoginForm = ({formType}) => {
     setApiError('')
   }, [formType])
 
-  if (user) {
+  if (user && !isSubmitting) {
     return (
-      <Redirect to='/games' />
+      <Redirect to='/' />
     )
   }
 
